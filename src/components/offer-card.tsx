@@ -1,6 +1,8 @@
 import React from 'react';
+import { Link } from 'react-router-dom';
 
 type PlaceCardProps = {
+  id: number;
   isPremium: boolean;
   image: string;
   price: number;
@@ -10,21 +12,19 @@ type PlaceCardProps = {
   rating: number;
 }
 
-export function PlaceCard({isPremium, image, price, isBookmark, title, placeCardType, rating} : PlaceCardProps): React.JSX.Element {
+export function OfferCard({id, isPremium, image, price, isBookmark, title, placeCardType, rating} : PlaceCardProps): React.JSX.Element {
   return (
     <article className="cities__card place-card">
-      <div className="place-card__mark">
-        {isPremium ?
-          <div className="place-card__mark">
-            <span>Premium</span>
-          </div>
-          :
-          null}
-      </div>
+      {isPremium ?
+        <div className="place-card__mark">
+          <span>Premium</span>
+        </div>
+        :
+        null}
       <div className="cities__image-wrapper place-card__image-wrapper">
-        <a href="#">
+        <Link to={`/offer/${id}`}>
           <img className="place-card__image" src={image} width={260} height={200} alt="Place image"/>
-        </a>
+        </Link>
       </div>
       <div className="place-card__info">
         <div className="place-card__price-wrapper">
@@ -41,12 +41,12 @@ export function PlaceCard({isPremium, image, price, isBookmark, title, placeCard
         </div>
         <div className="place-card__rating rating">
           <div className="place-card__stars rating__stars">
-            <span style={{width: `calc(100% / 5 * ${rating}`}}></span>
+            <span style={{width: `calc(100% / 5 * ${rating})`}}></span>
             <span className="visually-hidden">Rating</span>
           </div>
         </div>
         <h2 className="place-card__name">
-          <a href="#">{title}</a>
+          <Link to={`/offer/${id}`}>{title}</Link>
         </h2>
         <p className="place-card__type">{placeCardType}</p>
       </div>
