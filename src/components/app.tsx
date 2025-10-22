@@ -8,7 +8,6 @@ import {NotFoundPage} from './not-found-page';
 import {AuthorizationStatus} from '../const';
 
 export function App({placeCount, offers}: MainPageProps): React.JSX.Element {
-  console.log(offers);
   return (
     <BrowserRouter>
       <Routes>

@@ -12,17 +12,19 @@ export function OfferPageWrapper({ offers }: OfferPageWrapperProps): React.JSX.E
   const id = params.id ?? '';
 
   const offer = offers.find((o) => String(o.key) === id);
-  
+
   if (!offer) {
     return <Navigate to="/" replace />;
   }
 
-  return <OfferPage
-    isPremium={offer.isPremium}
-    price={offer.price}
-    isBookmark={offer.isBookmark}
-    title={offer.title}
-    placeCardType={offer.placeCardType}
-    rating={offer.rating}
-  />;
+  return (
+    <OfferPage
+      isPremium={offer.isPremium}
+      price={offer.price}
+      isBookmark={offer.isBookmark}
+      title={offer.title}
+      placeCardType={offer.placeCardType}
+      rating={offer.rating}
+    />
+  );
 }
