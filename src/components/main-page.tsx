@@ -1,11 +1,12 @@
-import {PlaceCard} from './PlaceCard';
-import { placesData } from '../places-data';
+import { Offer } from '../mocks/offers';
+import { Offers } from './offers';
 
 export type MainPageProps = {
     placeCount: number;
+    offers: Offer[];
 }
 
-export function MainPage({placeCount}: MainPageProps): React.JSX.Element {
+export function MainPage({placeCount, offers}: MainPageProps): React.JSX.Element {
   return (
     <div className="page page--gray page--main">
       <header className="header">
@@ -23,7 +24,7 @@ export function MainPage({placeCount}: MainPageProps): React.JSX.Element {
                     <div className="header__avatar-wrapper user__avatar-wrapper">
                     </div>
                     <span className="header__user-name user__name">Oliver.conner@gmail.com</span>
-                    <span className="header__favorite-count">3</span>
+                    <span className="header__favorite-count">4</span>
                   </a>
                 </li>
                 <li className="header__nav-item">
@@ -96,20 +97,7 @@ export function MainPage({placeCount}: MainPageProps): React.JSX.Element {
                 </ul>
               </form>
               <div className="cities__places-list places__list tabs__content">
-                {
-                  placesData.map((place) => (
-                    <PlaceCard
-                      key={place.key}
-                      isPremium={place.isPremium}
-                      image={place.image}
-                      price={place.price}
-                      isBookmark={place.isBookmark}
-                      title={place.title}
-                      placeCardType={place.placeCardType}
-                      rating={place.rating}
-                    />
-                  ))
-                }
+                <Offers offers={offers}/>
               </div>
             </section>
             <div className="cities__right-section">
