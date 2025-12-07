@@ -1,19 +1,22 @@
 import {Route, BrowserRouter, Routes} from 'react-router-dom';
-import {MainPage, MainPageProps} from './main-page';
+import {MainPage} from './main-page';
 import { LoginPage } from './login-page';
 import { FavoritesPage } from './favorites-page';
 import { OfferPageWrapper } from './offer-page-wrapper';
 import {PrivateRoute} from './private-route';
 import {NotFoundPage} from './not-found-page';
 import {AuthorizationStatus} from '../const';
+import { useAppSelector } from '../hooks';
 
-export function App({placeCount, offers}: MainPageProps): React.JSX.Element {
+export function App(): React.JSX.Element {
+  const offers = useAppSelector((state) => state.offers) ;
+  const favorites = offers.filter((offer) => offer.isBookmark);
   return (
     <BrowserRouter>
       <Routes>
         <Route
           path="/"
-          element={<MainPage placeCount={placeCount} offers={offers}/>}
+          element={<MainPage/>}
         />
         <Route
           path="/login"
@@ -23,7 +26,7 @@ export function App({placeCount, offers}: MainPageProps): React.JSX.Element {
           path="/favorites"
           element={
             <PrivateRoute authorizationStatus={AuthorizationStatus.Auth}>
-              <FavoritesPage favorites={offers}/>
+              <FavoritesPage favorites={favorites}/>
             </PrivateRoute>
           }
         />
