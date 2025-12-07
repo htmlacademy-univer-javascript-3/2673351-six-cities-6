@@ -47,6 +47,7 @@ export const offers: Offer[] = [
   },
   {
     key: 3,
+    cityName: 'Amsterdam',
     isPremium: false,
     image: 'markup/img/apartment-02.jpg',
     price: 132,
@@ -61,6 +62,7 @@ export const offers: Offer[] = [
   },
   {
     key: 4,
+    cityName: 'Amsterdam',
     isPremium: true,
     image: 'markup/img/apartment-03.jpg',
     price: 180,
