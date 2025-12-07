@@ -1,5 +1,6 @@
 import { Offer } from '../mocks/offers';
 import { Offers } from './offers';
+import { Map } from './map';
 
 export type MainPageProps = {
     placeCount: number;
@@ -101,7 +102,7 @@ export function MainPage({placeCount, offers}: MainPageProps): React.JSX.Element
               </div>
             </section>
             <div className="cities__right-section">
-              <section className="cities__map map"></section>
+              <Map offers={offers} />
             </div>
           </div>
         </div>
