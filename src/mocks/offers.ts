@@ -1,5 +1,6 @@
 export interface Offer {
   key: number;
+  cityName: string;
   isPremium: boolean;
   image: string;
   price: number;
@@ -12,6 +13,7 @@ export interface Offer {
 export const offers: Offer[] = [
   {
     key: 1,
+    cityName: 'Amsterdam',
     isPremium: true,
     image: 'markup/img/apartment-01.jpg',
     price: 120,
@@ -22,6 +24,7 @@ export const offers: Offer[] = [
   },
   {
     key: 2,
+    cityName: 'Amsterdam',
     isPremium: false,
     image: 'markup/img/room.jpg',
     price: 80,
@@ -32,6 +35,7 @@ export const offers: Offer[] = [
   },
 //   {
 //     key: 3,
+//     cityName: 'Amsterdam',
 //     isPremium: false,
 //     image: 'markup/img/apartment-02.jpg',
 //     price: 132,
@@ -42,6 +46,7 @@ export const offers: Offer[] = [
 //   },
 //   {
 //     key: 4,
+//     cityName: 'Amsterdam',
 //     isPremium: true,
 //     image: 'markup/img/apartment-03.jpg',
 //     price: 180,
