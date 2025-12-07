@@ -7,10 +7,9 @@ import {PrivateRoute} from './private-route';
 import {NotFoundPage} from './not-found-page';
 import {AuthorizationStatus} from '../const';
 import { useAppSelector } from '../hooks';
-import { Offer } from '../mocks/offers';
 
 export function App(): React.JSX.Element {
-  const offers = useAppSelector((state) => state.offers) as Offer[];
+  const offers = useAppSelector((state) => state.offers) ;
   const favorites = offers.filter((offer) => offer.isBookmark);
   return (
     <BrowserRouter>
