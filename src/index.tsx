@@ -9,12 +9,11 @@ import { loadOffers } from './store/action';
 const root = ReactDOM.createRoot(
   document.getElementById('root') as HTMLElement
 );
-const placeCount = 5;
 store.dispatch(loadOffers(offers));
 root.render(
   <React.StrictMode>
     <Provider store={store}>
-      <App placeCount={placeCount} offers={offers}/>
+      <App/>
     </Provider>
   </React.StrictMode>
 );
