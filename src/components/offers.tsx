@@ -1,5 +1,5 @@
 import {OfferCard} from './offer-card';
-import { Offer } from '../mocks/offers';
+import { Offer } from '../types/offer';
 import { useState } from 'react';
 
 export type OffersProps = {
@@ -7,7 +7,7 @@ export type OffersProps = {
 }
 
 export function Offers({offers}: OffersProps): React.JSX.Element {
-  const [, setActiveOffer] = useState(0);
+  const [, setActiveOffer] = useState<string | null>(null);
   return (
     <div className="cities__places-list places__list tabs__content">
       {
@@ -15,7 +15,7 @@ export function Offers({offers}: OffersProps): React.JSX.Element {
           <div
             key={offer.key}
             onMouseEnter={() => setActiveOffer(offer.key)}
-            onMouseLeave={() => setActiveOffer(0)}
+            onMouseLeave={() => setActiveOffer(null)}
           >
             <OfferCard
               id={offer.key}
