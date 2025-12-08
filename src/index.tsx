@@ -1,15 +1,14 @@
 import React from 'react';
 import ReactDOM from 'react-dom/client';
-import {App} from './components/app';
-import {offers} from './mocks/offers';
-import {Provider} from 'react-redux';
-import {store} from './store';
-import { loadOffers } from './store/action';
+import { App } from './components/app';
+import { Provider } from 'react-redux';
+import { store } from './store';
+import { fetchOffers } from './store/offers/thunks';
 
 const root = ReactDOM.createRoot(
   document.getElementById('root') as HTMLElement
 );
-store.dispatch(loadOffers(offers));
+store.dispatch(fetchOffers());
 root.render(
   <React.StrictMode>
     <Provider store={store}>

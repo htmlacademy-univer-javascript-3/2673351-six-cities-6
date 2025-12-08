@@ -1,4 +1,4 @@
-import { Offer } from '../mocks/offers';
+import { Offer } from '../types/offer';
 import { Favorites } from './favorites';
 import { Link } from 'react-router-dom';
 
