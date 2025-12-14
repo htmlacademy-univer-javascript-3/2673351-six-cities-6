@@ -1,5 +1,5 @@
 import {FavoritesCard} from './favorites-card';
-import { Offer } from '../mocks/offers';
+import { Offer } from '../types/offer';
 import { useState } from 'react';
 
 export type FavoritesProps = {
@@ -7,7 +7,7 @@ export type FavoritesProps = {
 }
 
 export function Favorites({favorites}: FavoritesProps): React.JSX.Element {
-  const [, setActiveOffer] = useState(0);
+  const [, setActiveOffer] = useState<string | null>(null);
   return (
     <div className="favorites__places">
       {
@@ -15,7 +15,7 @@ export function Favorites({favorites}: FavoritesProps): React.JSX.Element {
           <div
             key={offer.key}
             onMouseEnter={() => setActiveOffer(offer.key)}
-            onMouseLeave={() => setActiveOffer(0)}
+            onMouseLeave={() => setActiveOffer(null)}
           >
             <FavoritesCard
               key={offer.key}

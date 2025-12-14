@@ -3,9 +3,10 @@ import { CITIES } from '../const';
 import { CitiesList } from './cities-list';
 import { useAppDispatch, useAppSelector } from '../hooks';
 import { changeCity } from '../store/action';
-import { Offer } from '../mocks/offers';
+import { Offer } from '../types/offer';
 import { Offers } from './offers';
 import { Map } from './map';
+import { Spinner } from './spinner/spinner';
 
 export type MainPageProps = {
     placeCount: number;
@@ -15,8 +16,10 @@ export type MainPageProps = {
 export function MainPage(): React.JSX.Element {
   const dispatch = useAppDispatch();
 
+  const isLoading = useAppSelector((state) => state.isLoading);
+
   const currentCity = useAppSelector((state) => state.cityName);
-  const allOffers = useAppSelector((state) => state.offers) ;
+  const allOffers = useAppSelector((state) => state.offers);
 
   const cityOffers = allOffers.filter((offer) => offer.cityName === currentCity);
   const placeCount = cityOffers.length;
@@ -24,6 +27,11 @@ export function MainPage(): React.JSX.Element {
   const handleCityChange = (city: string[number]) => {
     dispatch(changeCity(city));
   };
+
+  if (isLoading) {
+    return <Spinner />;
+  }
+
   return (
     <div className="page page--gray page--main">
       <header className="header">

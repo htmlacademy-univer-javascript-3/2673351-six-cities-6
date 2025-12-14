@@ -1,7 +1,7 @@
 import React from 'react';
 import { useParams, Navigate } from 'react-router-dom';
 import { OfferPage } from './offer-page';
-import { Offer } from '../mocks/offers';
+import { Offer } from '../types/offer';
 
 type OfferPageWrapperProps = {
   offers: Offer[];
