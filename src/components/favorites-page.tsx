@@ -5,6 +5,7 @@ import { Link } from 'react-router-dom';
 import { useAppSelector } from '../hooks';
 import { selectFavoritesCount, selectUserInfo } from '../store/selectors';
 import { FavoritesEmptyPage } from './favorites-empty-page';
+import { useLogout } from '../use-logout';
 
 export type FavoritesPageProps = {
   favorites: Offer[];
@@ -13,6 +14,7 @@ export type FavoritesPageProps = {
 export function FavoritesPage({favorites}: FavoritesPageProps): React.JSX.Element {
   const favoritesCount = useAppSelector(selectFavoritesCount);
   const userInfo = useAppSelector(selectUserInfo);
+  const handleLogout = useLogout();
   const favoritesByCity = useMemo(() => {
     const grouped = new Map<string, Offer[]>();
     favorites.forEach((offer) => {
@@ -51,7 +53,14 @@ export function FavoritesPage({favorites}: FavoritesPageProps): React.JSX.Elemen
                   </Link>
                 </li>
                 <li className="header__nav-item">
-                  <a className="header__nav-link" href="#">
+                  <a
+                    className="header__nav-link"
+                    href="#"
+                    onClick={(event) => {
+                      event.preventDefault();
+                      handleLogout();
+                    }}
+                  >
                     <span className="header__signout">Sign out</span>
                   </a>
                 </li>
