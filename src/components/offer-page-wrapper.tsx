@@ -4,14 +4,21 @@ import { OfferPage } from './offer-page';
 import { useAppDispatch, useAppSelector } from '../hooks';
 import { fetchOfferData } from '../store/offers/thunks';
 import { Spinner } from './spinner/spinner';
+import {
+  selectAuthorizationStatus,
+  selectComments,
+  selectNearbyOffers,
+  selectOfferDetails,
+  selectOfferNotFound,
+} from '../store/selectors';
 
 export function OfferPageWrapper(): React.JSX.Element {
   const dispatch = useAppDispatch();
-  const reviews = useAppSelector((state) => state.comments);
-  const offer = useAppSelector((state) => state.offerDetails);
-  const nearbyOffers = useAppSelector((state) => state.nearbyOffers);
-  const authorizationStatus = useAppSelector((state) => state.authorizationStatus);
-  const offerNotFound = useAppSelector((state) => state.offerNotFound);
+  const reviews = useAppSelector(selectComments);
+  const offer = useAppSelector(selectOfferDetails);
+  const nearbyOffers = useAppSelector(selectNearbyOffers);
+  const authorizationStatus = useAppSelector(selectAuthorizationStatus);
+  const offerNotFound = useAppSelector(selectOfferNotFound);
   const params = useParams<{ id: string }>();
   const id = params.id ?? '';
 
