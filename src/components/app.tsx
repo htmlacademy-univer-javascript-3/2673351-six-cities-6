@@ -5,7 +5,6 @@ import { FavoritesPage } from './favorites-page';
 import { OfferPageWrapper } from './offer-page-wrapper';
 import { PrivateRoute } from './private-route';
 import { NotFoundPage } from './not-found-page';
-import { AuthorizationStatus } from '../const';
 import { useAppSelector } from '../hooks';
 
 export function App(): React.JSX.Element {
@@ -25,7 +24,7 @@ export function App(): React.JSX.Element {
         <Route
           path="/favorites"
           element={
-            <PrivateRoute authorizationStatus={AuthorizationStatus.Auth}>
+            <PrivateRoute>
               <FavoritesPage favorites={favorites}/>
             </PrivateRoute>
           }

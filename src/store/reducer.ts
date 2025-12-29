@@ -1,7 +1,16 @@
 import { createReducer } from '@reduxjs/toolkit';
 import { Offer } from '../types/offer';
 import { Review } from '../types/review';
-import { changeCity, loadComments, loadOffers, setOffersLoading } from './action';
+import { AuthorizationStatus } from '../const';
+import { AuthInfo } from '../types/auth-info';
+import {
+  changeCity,
+  loadComments,
+  loadOffers,
+  setAuthorizationStatus,
+  setOffersLoading,
+  setUserInfo,
+} from './action';
 
 
 export type OffersState = {
@@ -9,6 +18,8 @@ export type OffersState = {
   offers: Offer[];
   isLoading: boolean;
   comments: Review[];
+  authorizationStatus: AuthorizationStatus;
+  userInfo: AuthInfo | null;
 };
 
 const initialState: OffersState = {
@@ -16,6 +27,8 @@ const initialState: OffersState = {
   offers: [],
   isLoading: false,
   comments: [],
+  authorizationStatus: AuthorizationStatus.Unknown,
+  userInfo: null,
 };
 
 export const reducer = createReducer(initialState, (builder) => {
@@ -31,5 +44,11 @@ export const reducer = createReducer(initialState, (builder) => {
     })
     .addCase(loadComments, (state, action) => {
       state.comments = action.payload;
+    })
+    .addCase(setAuthorizationStatus, (state, action) => {
+      state.authorizationStatus = action.payload;
+    })
+    .addCase(setUserInfo, (state, action) => {
+      state.userInfo = action.payload;
     });
 });
