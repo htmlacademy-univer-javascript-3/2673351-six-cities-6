@@ -1,4 +1,4 @@
-import { useEffect, useRef } from 'react';
+import React, { useEffect, useMemo, useRef } from 'react';
 import leaflet from 'leaflet';
 import 'leaflet/dist/leaflet.css';
 import { Offer } from '../types/offer';
@@ -11,9 +11,31 @@ type MapProps = {
 
 const DEFAULT_ZOOM = 12;
 
-export function Map({ offers, activeOfferId, className }: MapProps): React.JSX.Element {
+export const Map = React.memo(({
+  offers,
+  activeOfferId,
+  className,
+}: MapProps): React.JSX.Element => {
   const mapRef = useRef<leaflet.Map | null>(null);
   const mapContainerRef = useRef<HTMLElement | null>(null);
+  const defaultIcon = useMemo(
+    () =>
+      leaflet.icon({
+        iconUrl: 'img/pin.svg',
+        iconSize: [28, 40],
+        iconAnchor: [14, 40],
+      }),
+    []
+  );
+  const activeIcon = useMemo(
+    () =>
+      leaflet.icon({
+        iconUrl: 'img/pin-active.svg',
+        iconSize: [28, 40],
+        iconAnchor: [14, 40],
+      }),
+    []
+  );
 
   useEffect(() => {
     if (!mapContainerRef.current || mapRef.current !== null || offers.length === 0) {
@@ -55,18 +77,6 @@ export function Map({ offers, activeOfferId, className }: MapProps): React.JSX.E
 
     const markersLayer = leaflet.layerGroup().addTo(mapRef.current);
 
-    const defaultIcon = leaflet.icon({
-      iconUrl: 'img/pin.svg',
-      iconSize: [28, 40],
-      iconAnchor: [14, 40],
-    });
-
-    const activeIcon = leaflet.icon({
-      iconUrl: 'img/pin-active.svg',
-      iconSize: [28, 40],
-      iconAnchor: [14, 40],
-    });
-
     offers.forEach((offer) => {
       leaflet
         .marker(
@@ -85,7 +95,7 @@ export function Map({ offers, activeOfferId, className }: MapProps): React.JSX.E
       markersLayer.clearLayers();
       mapRef.current?.removeLayer(markersLayer);
     };
-  }, [offers, activeOfferId]);
+  }, [activeIcon, activeOfferId, defaultIcon, offers]);
 
   return (
     <section
@@ -93,4 +103,6 @@ export function Map({ offers, activeOfferId, className }: MapProps): React.JSX.E
       ref={mapContainerRef}
     />
   );
-}
+});
+
+Map.displayName = 'Map';

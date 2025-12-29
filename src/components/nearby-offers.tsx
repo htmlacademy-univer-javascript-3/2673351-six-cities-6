@@ -6,12 +6,14 @@ type NearbyOffersProps = {
   offers: Offer[];
 };
 
-export function NearbyOffers({ offers }: NearbyOffersProps): React.JSX.Element {
-  return (
-    <div className="near-places__list places__list">
-      {offers.map((offer) => (
-        <NearbyOfferCard key={offer.key} offer={offer} />
-      ))}
-    </div>
-  );
-}
+export const NearbyOffers = React.memo(({
+  offers,
+}: NearbyOffersProps): React.JSX.Element => (
+  <div className="near-places__list places__list">
+    {offers.map((offer) => (
+      <NearbyOfferCard key={offer.key} offer={offer} />
+    ))}
+  </div>
+));
+
+NearbyOffers.displayName = 'NearbyOffers';

@@ -6,10 +6,10 @@ import { OfferPageWrapper } from './offer-page-wrapper';
 import { PrivateRoute } from './private-route';
 import { NotFoundPage } from './not-found-page';
 import { useAppSelector } from '../hooks';
+import { selectFavorites } from '../store/selectors';
 
 export function App(): React.JSX.Element {
-  const offers = useAppSelector((state) => state.offers);
-  const favorites = offers.filter((offer) => offer.isBookmark);
+  const favorites = useAppSelector(selectFavorites);
   return (
     <BrowserRouter>
       <Routes>

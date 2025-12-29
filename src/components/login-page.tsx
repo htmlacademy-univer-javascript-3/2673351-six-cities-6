@@ -3,11 +3,12 @@ import { Link, Navigate, useNavigate } from 'react-router-dom';
 import { AuthorizationStatus } from '../const';
 import { useAppDispatch, useAppSelector } from '../hooks';
 import { login } from '../store/offers/thunks';
+import { selectAuthorizationStatus } from '../store/selectors';
 
 export function LoginPage(): React.JSX.Element {
   const dispatch = useAppDispatch();
   const navigate = useNavigate();
-  const authorizationStatus = useAppSelector((state) => state.authorizationStatus);
+  const authorizationStatus = useAppSelector(selectAuthorizationStatus);
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
 

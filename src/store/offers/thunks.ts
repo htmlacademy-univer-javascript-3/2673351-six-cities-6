@@ -144,14 +144,14 @@ export const postComment = (
       comment,
       rating,
     });
-    const nextComments = [...getState().comments, mapComment(data)];
+    const nextComments = [...getState().offer.comments, mapComment(data)];
     dispatch(loadComments(nextComments));
   };
 
 export const fetchOfferData = (offerId: string): ThunkActionResult =>
   async (dispatch, getState) => {
     await dispatch(fetchOfferDetails(offerId));
-    if (getState().offerNotFound) {
+    if (getState().offer.offerNotFound) {
       return;
     }
     await Promise.all([
