@@ -25,11 +25,12 @@ export function OfferPageWrapper(): React.JSX.Element {
   }, [dispatch, offerKey]);
 
   if (!offer) {
-    return <Navigate to="/" replace />;
+    return <Spinner />;
   }
 
   return (
     <OfferPage
+      offerId={offer.key}
       isPremium={offer.isPremium}
       price={offer.price}
       isBookmark={offer.isBookmark}
@@ -38,6 +39,7 @@ export function OfferPageWrapper(): React.JSX.Element {
       rating={offer.rating}
       reviews={reviews}
       nearbyOffers={nearbyOffers}
+      authorizationStatus={authorizationStatus}
     />
   );
 }

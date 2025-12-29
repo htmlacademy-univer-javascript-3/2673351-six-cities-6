@@ -6,8 +6,10 @@ import { Map } from './map';
 import { Offer } from '../types/offer';
 import { Review } from '../types/review';
 import { NearbyOffers } from './nearby-offers';
+import { AuthorizationStatus } from '../const';
 
 export type OfferPageProps = {
+  offerId: string;
   isPremium: boolean;
   price: number;
   isBookmark: boolean;
@@ -16,6 +18,7 @@ export type OfferPageProps = {
   rating: number;
   reviews: Review[];
   nearbyOffers: Offer[];
+  authorizationStatus: AuthorizationStatus;
 }
 
 export const OfferPage = React.memo(({
