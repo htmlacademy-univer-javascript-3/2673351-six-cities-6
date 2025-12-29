@@ -96,9 +96,7 @@ export function MainPage(): React.JSX.Element {
               <h2 className="visually-hidden">Places</h2>
               <b className="places__found">{placeCount} places to stay in {currentCity}</b>
               <SortingOptions currentSort={currentSort} onSortChange={setCurrentSort} />
-              <div className="cities__places-list places__list tabs__content">
-                <Offers offers={sortedOffers} onOfferHover={setActiveOfferId} />
-              </div>
+              <Offers offers={sortedOffers} onOfferHover={setActiveOfferId} />
             </section>
             <div className="cities__right-section">
               <Map offers={cityOffers} activeOfferId={activeOfferId} />
