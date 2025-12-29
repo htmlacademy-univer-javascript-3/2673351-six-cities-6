@@ -5,11 +5,12 @@ import { Offer } from '../types/offer';
 
 type MapProps = {
   offers: Offer[];
+  activeOfferId: string | null;
 };
 
 const DEFAULT_ZOOM = 12;
 
-export function Map({ offers }: MapProps): React.JSX.Element {
+export function Map({ offers, activeOfferId }: MapProps): React.JSX.Element {
   const mapRef = useRef<leaflet.Map | null>(null);
   const mapContainerRef = useRef<HTMLElement | null>(null);
 
@@ -59,6 +60,12 @@ export function Map({ offers }: MapProps): React.JSX.Element {
       iconAnchor: [14, 40],
     });
 
+    const activeIcon = leaflet.icon({
+      iconUrl: 'img/pin-active.svg',
+      iconSize: [28, 40],
+      iconAnchor: [14, 40],
+    });
+
     offers.forEach((offer) => {
       leaflet
         .marker(
@@ -67,7 +74,7 @@ export function Map({ offers }: MapProps): React.JSX.Element {
             lng: offer.location.longitude,
           },
           {
-            icon: defaultIcon,
+            icon: offer.key === activeOfferId ? activeIcon : defaultIcon,
           }
         )
         .addTo(markersLayer);
@@ -77,7 +84,7 @@ export function Map({ offers }: MapProps): React.JSX.Element {
       markersLayer.clearLayers();
       mapRef.current?.removeLayer(markersLayer);
     };
-  }, [offers]);
+  }, [offers, activeOfferId]);
 
   return (
     <section

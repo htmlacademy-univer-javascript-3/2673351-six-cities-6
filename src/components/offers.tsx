@@ -1,21 +1,20 @@
-import {OfferCard} from './offer-card';
+import { OfferCard } from './offer-card';
 import { Offer } from '../types/offer';
-import { useState } from 'react';
 
 export type OffersProps = {
     offers: Offer[];
-}
+    onOfferHover: (offerId: string | null) => void;
+};
 
-export function Offers({offers}: OffersProps): React.JSX.Element {
-  const [, setActiveOffer] = useState<string | null>(null);
+export function Offers({ offers, onOfferHover }: OffersProps): React.JSX.Element {
   return (
     <div className="cities__places-list places__list tabs__content">
       {
         offers.map((offer) => (
           <div
             key={offer.key}
-            onMouseEnter={() => setActiveOffer(offer.key)}
-            onMouseLeave={() => setActiveOffer(null)}
+            onMouseEnter={() => onOfferHover(offer.key)}
+            onMouseLeave={() => onOfferHover(null)}
           >
             <OfferCard
               id={offer.key}
