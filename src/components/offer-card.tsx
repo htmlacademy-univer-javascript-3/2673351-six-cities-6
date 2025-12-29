@@ -10,18 +10,31 @@ type PlaceCardProps = {
   title: string;
   placeCardType: string;
   rating: number;
+  cardClassName?: string;
+  imageWrapperClassName?: string;
 }
 
-export function OfferCard({id, isPremium, image, price, isBookmark, title, placeCardType, rating} : PlaceCardProps): React.JSX.Element {
+export function OfferCard({
+  id,
+  isPremium,
+  image,
+  price,
+  isBookmark,
+  title,
+  placeCardType,
+  rating,
+  cardClassName = 'cities__card',
+  imageWrapperClassName = 'cities__image-wrapper',
+}: PlaceCardProps): React.JSX.Element {
   return (
-    <article className="cities__card place-card">
+    <article className={`${cardClassName} place-card`}>
       {isPremium ?
         <div className="place-card__mark">
           <span>Premium</span>
         </div>
         :
         null}
-      <div className="cities__image-wrapper place-card__image-wrapper">
+      <div className={`${imageWrapperClassName} place-card__image-wrapper`}>
         <Link to={`/offer/${id}`}>
           <img className="place-card__image" src={image} width={260} height={200} alt="Place image"/>
         </Link>

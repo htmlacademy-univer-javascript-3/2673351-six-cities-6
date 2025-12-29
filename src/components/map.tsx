@@ -6,11 +6,12 @@ import { Offer } from '../types/offer';
 type MapProps = {
   offers: Offer[];
   activeOfferId: string | null;
+  className?: string;
 };
 
 const DEFAULT_ZOOM = 12;
 
-export function Map({ offers, activeOfferId }: MapProps): React.JSX.Element {
+export function Map({ offers, activeOfferId, className }: MapProps): React.JSX.Element {
   const mapRef = useRef<leaflet.Map | null>(null);
   const mapContainerRef = useRef<HTMLElement | null>(null);
 
@@ -88,7 +89,7 @@ export function Map({ offers, activeOfferId }: MapProps): React.JSX.Element {
 
   return (
     <section
-      className="cities__map map"
+      className={className ?? 'cities__map map'}
       ref={mapContainerRef}
     />
   );

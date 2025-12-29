@@ -3,12 +3,17 @@ import { Offer } from '../types/offer';
 
 export type OffersProps = {
     offers: Offer[];
-    onOfferHover: (offerId: string | null) => void;
+    onOfferHover?: (offerId: string | null) => void;
+    listClassName?: string;
 };
 
-export function Offers({ offers, onOfferHover }: OffersProps): React.JSX.Element {
+export function Offers({
+  offers,
+  onOfferHover = () => {},
+  listClassName = 'cities__places-list places__list tabs__content',
+}: OffersProps): React.JSX.Element {
   return (
-    <div className="cities__places-list places__list tabs__content">
+    <div className={listClassName}>
       {
         offers.map((offer) => (
           <div
