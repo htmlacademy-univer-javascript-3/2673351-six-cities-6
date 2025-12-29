@@ -32,9 +32,23 @@ const offerSlice = createSlice({
     setOfferNotFound(state, action: PayloadAction<boolean>) {
       state.offerNotFound = action.payload;
     },
+    updateOffer(state, action: PayloadAction<Offer>) {
+      const updatedOffer = action.payload;
+      if (state.offerDetails?.key === updatedOffer.key) {
+        state.offerDetails = updatedOffer;
+      }
+      state.nearbyOffers = state.nearbyOffers.map((offer) =>
+        offer.key === updatedOffer.key ? updatedOffer : offer
+      );
+    },
   },
 });
 
-export const { loadComments, setOfferDetails, setNearbyOffers, setOfferNotFound } =
-  offerSlice.actions;
+export const {
+  loadComments,
+  setOfferDetails,
+  setNearbyOffers,
+  setOfferNotFound,
+  updateOffer,
+} = offerSlice.actions;
 export const offerReducer = offerSlice.reducer;

@@ -6,6 +6,7 @@ export const selectOfferState = (state: State) => state.offer;
 export const selectUserState = (state: State) => state.user;
 
 export const selectOffers = (state: State) => selectOffersState(state).offers;
+export const selectFavorites = (state: State) => selectOffersState(state).favorites;
 export const selectCityName = (state: State) => selectOffersState(state).cityName;
 export const selectIsLoading = (state: State) => selectOffersState(state).isLoading;
 
@@ -21,11 +22,6 @@ export const selectUserInfo = (state: State) => selectUserState(state).userInfo;
 export const selectCityOffers = createSelector(
   [selectOffers, selectCityName],
   (offers, cityName) => offers.filter((offer) => offer.cityName === cityName)
-);
-
-export const selectFavorites = createSelector(
-  [selectOffers],
-  (offers) => offers.filter((offer) => offer.isBookmark)
 );
 
 export const selectFavoritesCount = createSelector(

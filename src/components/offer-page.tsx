@@ -6,6 +6,7 @@ import { Offer } from '../types/offer';
 import { Review } from '../types/review';
 import { NearbyOffers } from './nearby-offers';
 import { AuthorizationStatus } from '../const';
+import { useFavoriteToggle } from '../use-favorite-toggle';
 
 export type OfferPageProps = {
   offerId: string;
@@ -33,6 +34,7 @@ export function OfferPage({
   authorizationStatus,
 }: OfferPageProps): React.JSX.Element {
   const isAuth = authorizationStatus === AuthorizationStatus.Auth;
+  const handleFavoriteClick = useFavoriteToggle(offerId, isBookmark);
   return (
     <div className="page">
       <header className="header">
@@ -100,7 +102,11 @@ export function OfferPage({
                 <h1 className="offer__name">
                   {title}
                 </h1>
-                <button className={`offer__bookmark-button ${isBookmark ? 'offer__bookmark-button--active' : ''} button`} type="button">
+                <button
+                  className={`offer__bookmark-button ${isBookmark ? 'offer__bookmark-button--active' : ''} button`}
+                  type="button"
+                  onClick={handleFavoriteClick}
+                >
                   <svg className="offer__bookmark-icon" width={31} height={33}>
                     <use xlinkHref="#icon-bookmark"></use>
                   </svg>

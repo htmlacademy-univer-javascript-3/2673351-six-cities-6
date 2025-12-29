@@ -1,12 +1,35 @@
+import { useMemo } from 'react';
 import { Offer } from '../types/offer';
 import { Favorites } from './favorites';
 import { Link } from 'react-router-dom';
+import { useAppSelector } from '../hooks';
+import { selectFavoritesCount, selectUserInfo } from '../store/selectors';
+import { FavoritesEmptyPage } from './favorites-empty-page';
 
 export type FavoritesPageProps = {
   favorites: Offer[];
 }
 
 export function FavoritesPage({favorites}: FavoritesPageProps): React.JSX.Element {
+  const favoritesCount = useAppSelector(selectFavoritesCount);
+  const userInfo = useAppSelector(selectUserInfo);
+  const favoritesByCity = useMemo(() => {
+    const grouped = new Map<string, Offer[]>();
+    favorites.forEach((offer) => {
+      const cityFavorites = grouped.get(offer.cityName);
+      if (cityFavorites) {
+        cityFavorites.push(offer);
+      } else {
+        grouped.set(offer.cityName, [offer]);
+      }
+    });
+    return Array.from(grouped.entries());
+  }, [favorites]);
+
+  if (favorites.length === 0) {
+    return <FavoritesEmptyPage />;
+  }
+
   return (
     <div className="page">
       <header className="header">
@@ -20,12 +43,12 @@ export function FavoritesPage({favorites}: FavoritesPageProps): React.JSX.Elemen
             <nav className="header__nav">
               <ul className="header__nav-list">
                 <li className="header__nav-item user">
-                  <a className="header__nav-link header__nav-link--profile" href="#">
+                  <Link className="header__nav-link header__nav-link--profile" to="/favorites">
                     <div className="header__avatar-wrapper user__avatar-wrapper">
                     </div>
-                    <span className="header__user-name user__name">Oliver.conner@gmail.com</span>
-                    <span className="header__favorite-count">4</span>
-                  </a>
+                    <span className="header__user-name user__name">{userInfo?.email ?? 'Unknown'}</span>
+                    <span className="header__favorite-count">{favoritesCount}</span>
+                  </Link>
                 </li>
                 <li className="header__nav-item">
                   <a className="header__nav-link" href="#">
@@ -43,34 +66,26 @@ export function FavoritesPage({favorites}: FavoritesPageProps): React.JSX.Elemen
           <section className="favorites">
             <h1 className="favorites__title">Saved listing</h1>
             <ul className="favorites__list">
-              <li className="favorites__locations-items">
-                <div className="favorites__locations locations locations--current">
-                  <div className="locations__item">
-                    <a className="locations__item-link" href="#">
-                      <span>Amsterdam</span>
-                    </a>
+              {favoritesByCity.map(([cityName, cityFavorites]) => (
+                <li key={cityName} className="favorites__locations-items">
+                  <div className="favorites__locations locations locations--current">
+                    <div className="locations__item">
+                      <a className="locations__item-link" href="#">
+                        <span>{cityName}</span>
+                      </a>
+                    </div>
                   </div>
-                </div>
-                <Favorites favorites={favorites}/>
-              </li>
-              <li className="favorites__locations-items">
-                <div className="favorites__locations locations locations--current">
-                  <div className="locations__item">
-                    <a className="locations__item-link" href="#">
-                      <span>Cologne</span>
-                    </a>
-                  </div>
-                </div>
-                <Favorites favorites={favorites}/>
-              </li>
+                  <Favorites favorites={cityFavorites}/>
+                </li>
+              ))}
             </ul>
           </section>
         </div>
       </main>
       <footer className="footer container">
-        <a className="footer__logo-link" href="main.html">
+        <Link className="footer__logo-link" to="/">
           <img className="footer__logo" src="img/logo.svg" alt="6 cities logo" width={64} height={33}/>
-        </a>
+        </Link>
       </footer>
     </div>
   );
