@@ -8,7 +8,10 @@ import {
   setOfferDetails,
   setOfferNotFound,
   setOffersLoading,
+  setFavorites,
   setUserInfo,
+  updateOfferDetails,
+  updateOffersOffer,
 } from '../action';
 import { Offer } from '../../types/offer';
 import { Review } from '../../types/review';
@@ -19,6 +22,7 @@ import { saveToken } from '../../services/token';
 const OFFERS_URL = '/offers';
 const COMMENTS_URL = '/comments';
 const LOGIN_URL = '/login';
+const FAVORITES_URL = '/favorite';
 const NOT_FOUND_STATUS = 404;
 
 type Location = {
@@ -89,6 +93,12 @@ export const fetchOffers = (): ThunkActionResult =>
     }
   };
 
+export const fetchFavorites = (): ThunkActionResult =>
+  async (dispatch, _getState, api: AxiosInstance) => {
+    const { data } = await api.get<ResponseOffer[]>(FAVORITES_URL);
+    dispatch(setFavorites(data.map(mapOffer)));
+  };
+
 const formatReviewDate = (date: string): string =>
   new Date(date).toLocaleString('en-US', { month: 'long', year: 'numeric' });
 
@@ -148,6 +158,22 @@ export const postComment = (
     dispatch(loadComments(nextComments));
   };
 
+type FavoriteStatus = 0 | 1;
+
+export const toggleFavoriteStatus = (
+  offerId: string,
+  isFavorite: boolean
+): ThunkActionResult =>
+  async (dispatch, _getState, api: AxiosInstance) => {
+    const status: FavoriteStatus = isFavorite ? 0 : 1;
+    const { data } = await api.post<ResponseOffer>(
+      `${FAVORITES_URL}/${offerId}/${status}`
+    );
+    const mappedOffer = mapOffer(data);
+    dispatch(updateOffersOffer(mappedOffer));
+    dispatch(updateOfferDetails(mappedOffer));
+  };
+
 export const fetchOfferData = (offerId: string): ThunkActionResult =>
   async (dispatch, getState) => {
     await dispatch(fetchOfferDetails(offerId));
@@ -166,9 +192,11 @@ export const checkAuth = (): ThunkActionResult =>
       const { data } = await api.get<AuthInfo>(LOGIN_URL);
       dispatch(setUserInfo(data));
       dispatch(setAuthorizationStatus(AuthorizationStatus.Auth));
+      await dispatch(fetchFavorites());
     } catch {
       dispatch(setUserInfo(null));
       dispatch(setAuthorizationStatus(AuthorizationStatus.NoAuth));
+      dispatch(setFavorites([]));
     }
   };
 
@@ -178,4 +206,5 @@ export const login = ({ email, password }: LoginData): ThunkActionResult =>
     saveToken(data.token);
     dispatch(setUserInfo(data));
     dispatch(setAuthorizationStatus(AuthorizationStatus.Auth));
+    await dispatch(fetchFavorites());
   };

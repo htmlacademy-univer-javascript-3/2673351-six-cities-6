@@ -8,6 +8,7 @@ import { Offers } from './offers';
 import { Map } from './map';
 import { Spinner } from './spinner/spinner';
 import { SortType, SortingOptions } from './sorting-options';
+import { MainEmptyPage } from './main-empty-page';
 import {
   selectAuthorizationStatus,
   selectCityName,
@@ -32,6 +33,7 @@ export function MainPage(): React.JSX.Element {
 
   const placeCount = cityOffers.length;
   const isAuth = authorizationStatus === AuthorizationStatus.Auth;
+  const hasOffers = cityOffers.length > 0;
 
   const sortedOffers = useMemo(() => {
     switch (currentSort) {
@@ -100,7 +102,11 @@ export function MainPage(): React.JSX.Element {
         </div>
       </header>
 
-      <main className="page__main page__main--index">
+      <main
+        className={`page__main page__main--index ${
+          hasOffers ? '' : 'page__main--index-empty'
+        }`}
+      >
         <h1 className="visually-hidden">Cities</h1>
         <div className="tabs">
           <section className="locations container">
@@ -112,17 +118,21 @@ export function MainPage(): React.JSX.Element {
           </section>
         </div>
         <div className="cities">
-          <div className="cities__places-container container">
-            <section className="cities__places places">
-              <h2 className="visually-hidden">Places</h2>
-              <b className="places__found">{placeCount} places to stay in {currentCity}</b>
-              <SortingOptions currentSort={currentSort} onSortChange={setCurrentSort} />
-              <Offers offers={sortedOffers} onOfferHover={setActiveOfferId} />
-            </section>
-            <div className="cities__right-section">
-              <Map offers={cityOffers} activeOfferId={activeOfferId} />
+          {hasOffers ? (
+            <div className="cities__places-container container">
+              <section className="cities__places places">
+                <h2 className="visually-hidden">Places</h2>
+                <b className="places__found">{placeCount} places to stay in {currentCity}</b>
+                <SortingOptions currentSort={currentSort} onSortChange={setCurrentSort} />
+                <Offers offers={sortedOffers} onOfferHover={setActiveOfferId} />
+              </section>
+              <div className="cities__right-section">
+                <Map offers={cityOffers} activeOfferId={activeOfferId} />
+              </div>
             </div>
-          </div>
+          ) : (
+            <MainEmptyPage cityName={currentCity} />
+          )}
         </div>
       </main>
     </div>);

@@ -1,23 +1,30 @@
-export function FavoritesEmptyPage(): React.JSX.Element{
+import { Link } from 'react-router-dom';
+import { useAppSelector } from '../hooks';
+import { selectFavoritesCount, selectUserInfo } from '../store/selectors';
+
+export function FavoritesEmptyPage(): React.JSX.Element {
+  const favoritesCount = useAppSelector(selectFavoritesCount);
+  const userInfo = useAppSelector(selectUserInfo);
+
   return (
     <div className="page page--favorites-empty">
       <header className="header">
         <div className="container">
           <div className="header__wrapper">
             <div className="header__left">
-              <a className="header__logo-link" href="main.html">
+              <Link className="header__logo-link" to="/">
                 <img className="header__logo" src="img/logo.svg" alt="6 cities logo" width={81} height={41}/>
-              </a>
+              </Link>
             </div>
             <nav className="header__nav">
               <ul className="header__nav-list">
                 <li className="header__nav-item user">
-                  <a className="header__nav-link header__nav-link--profile" href="#">
+                  <Link className="header__nav-link header__nav-link--profile" to="/favorites">
                     <div className="header__avatar-wrapper user__avatar-wrapper">
                     </div>
-                    <span className="header__user-name user__name">Oliver.conner@gmail.com</span>
-                    <span className="header__favorite-count">0</span>
-                  </a>
+                    <span className="header__user-name user__name">{userInfo?.email ?? 'Unknown'}</span>
+                    <span className="header__favorite-count">{favoritesCount}</span>
+                  </Link>
                 </li>
                 <li className="header__nav-item">
                   <a className="header__nav-link" href="#">
@@ -42,9 +49,9 @@ export function FavoritesEmptyPage(): React.JSX.Element{
         </div>
       </main>
       <footer className="footer">
-        <a className="footer__logo-link" href="main.html">
+        <Link className="footer__logo-link" to="/">
           <img className="footer__logo" src="img/logo.svg" alt="6 cities logo" width={64} height={33}/>
-        </a>
+        </Link>
       </footer>
     </div>);
 }

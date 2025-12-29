@@ -14,6 +14,7 @@ export const Favorites = React.memo(({ favorites }: FavoritesProps): React.JSX.E
           key={offer.key}
         >
           <FavoritesCard
+            id={offer.key}
             isPremium={offer.isPremium}
             image={offer.image}
             price={offer.price}
