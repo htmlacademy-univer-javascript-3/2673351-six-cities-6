@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useCallback, useState } from 'react';
 
 export type SortType = 'popular' | 'price-low-high' | 'price-high-low' | 'top-rated-first';
 
@@ -14,19 +14,19 @@ type SortingOptionsProps = {
   onSortChange: (sortType: SortType) => void;
 };
 
-export function SortingOptions({ currentSort, onSortChange }: SortingOptionsProps): React.JSX.Element {
+export const SortingOptions = React.memo(({ currentSort, onSortChange }: SortingOptionsProps): React.JSX.Element => {
   const [isOpen, setIsOpen] = useState(false);
 
   const activeOption = SORT_OPTIONS.find((option) => option.value === currentSort);
 
-  const handleToggle = () => {
+  const handleToggle = useCallback(() => {
     setIsOpen((prev) => !prev);
-  };
+  }, []);
 
-  const handleSelect = (sortType: SortType) => {
+  const handleSelect = useCallback((sortType: SortType) => {
     onSortChange(sortType);
     setIsOpen(false);
-  };
+  }, [onSortChange]);
 
   return (
     <form className="places__sorting" action="#" method="get">
@@ -67,4 +67,6 @@ export function SortingOptions({ currentSort, onSortChange }: SortingOptionsProp
       </ul>
     </form>
   );
-}
+});
+
+SortingOptions.displayName = 'SortingOptions';

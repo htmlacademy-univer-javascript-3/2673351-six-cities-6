@@ -1,28 +1,28 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useMemo } from 'react';
 import { useParams, Navigate } from 'react-router-dom';
 import { OfferPage } from './offer-page';
-import { Offer } from '../types/offer';
 import { useAppDispatch, useAppSelector } from '../hooks';
 import { fetchComments } from '../store/offers/thunks';
+import { makeSelectNearbyOffers, makeSelectOfferById, selectReviews } from '../store/selectors';
 
-type OfferPageWrapperProps = {
-  offers: Offer[];
-}
-
-export function OfferPageWrapper({ offers }: OfferPageWrapperProps): React.JSX.Element {
+export function OfferPageWrapper(): React.JSX.Element {
   const dispatch = useAppDispatch();
-  const reviews = useAppSelector((state) => state.comments);
+  const reviews = useAppSelector(selectReviews);
   const params = useParams<{ id: string }>();
   const id = params.id ?? '';
 
-  const offer = offers.find((o) => String(o.key) === id);
-  const nearbyOffers = offers.filter((item) => item.key !== offer?.key).slice(0, 3);
+  const selectOfferById = useMemo(makeSelectOfferById, []);
+  const selectNearbyOffers = useMemo(makeSelectNearbyOffers, []);
+
+  const offer = useAppSelector((state) => selectOfferById(state, id));
+  const offerKey = offer?.key ?? null;
+  const nearbyOffers = useAppSelector((state) => selectNearbyOffers(state, offerKey));
 
   useEffect(() => {
-    if (offer) {
-      dispatch(fetchComments(offer.key));
+    if (offerKey) {
+      dispatch(fetchComments(offerKey));
     }
-  }, [dispatch, offer]);
+  }, [dispatch, offerKey]);
 
   if (!offer) {
     return <Navigate to="/" replace />;

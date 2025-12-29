@@ -1,4 +1,4 @@
-import { useEffect, useRef } from 'react';
+import React, { useEffect, useRef } from 'react';
 import leaflet from 'leaflet';
 import 'leaflet/dist/leaflet.css';
 import { Offer } from '../types/offer';
@@ -11,7 +11,7 @@ type MapProps = {
 
 const DEFAULT_ZOOM = 12;
 
-export function Map({ offers, activeOfferId, className }: MapProps): React.JSX.Element {
+export const Map = React.memo(({ offers, activeOfferId, className }: MapProps): React.JSX.Element => {
   const mapRef = useRef<leaflet.Map | null>(null);
   const mapContainerRef = useRef<HTMLElement | null>(null);
 
@@ -93,4 +93,6 @@ export function Map({ offers, activeOfferId, className }: MapProps): React.JSX.E
       ref={mapContainerRef}
     />
   );
-}
+});
+
+Map.displayName = 'Map';

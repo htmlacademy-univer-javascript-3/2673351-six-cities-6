@@ -1,35 +1,35 @@
-import React, { useMemo, useState } from 'react';
+import React, { useCallback, useMemo, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { AuthorizationStatus, CITIES } from '../const';
 import { CitiesList } from './cities-list';
 import { useAppDispatch, useAppSelector } from '../hooks';
 import { changeCity } from '../store/action';
-import { Offer } from '../types/offer';
 import { Offers } from './offers';
 import { Map } from './map';
 import { Spinner } from './spinner/spinner';
 import { SortType, SortingOptions } from './sorting-options';
-
-export type MainPageProps = {
-    placeCount: number;
-    offers: Offer[];
-}
+import {
+  selectAuthorizationStatus,
+  selectCityName,
+  selectCityOffers,
+  selectFavoritesCount,
+  selectOffersLoading,
+  selectUserInfo,
+} from '../store/selectors';
 
 export function MainPage(): React.JSX.Element {
   const dispatch = useAppDispatch();
 
-  const isLoading = useAppSelector((state) => state.isLoading);
-  const authorizationStatus = useAppSelector((state) => state.authorizationStatus);
-  const userInfo = useAppSelector((state) => state.userInfo);
-
-  const currentCity = useAppSelector((state) => state.cityName);
-  const allOffers = useAppSelector((state) => state.offers);
+  const isLoading = useAppSelector(selectOffersLoading);
+  const authorizationStatus = useAppSelector(selectAuthorizationStatus);
+  const userInfo = useAppSelector(selectUserInfo);
+  const currentCity = useAppSelector(selectCityName);
+  const cityOffers = useAppSelector(selectCityOffers);
+  const favoritesCount = useAppSelector(selectFavoritesCount);
   const [activeOfferId, setActiveOfferId] = useState<string | null>(null);
   const [currentSort, setCurrentSort] = useState<SortType>('popular');
 
-  const cityOffers = allOffers.filter((offer) => offer.cityName === currentCity);
   const placeCount = cityOffers.length;
-  const favoritesCount = allOffers.filter((offer) => offer.isBookmark).length;
   const isAuth = authorizationStatus === AuthorizationStatus.Auth;
 
   const sortedOffers = useMemo(() => {
@@ -45,9 +45,13 @@ export function MainPage(): React.JSX.Element {
     }
   }, [cityOffers, currentSort]);
 
-  const handleCityChange = (city: string[number]) => {
+  const handleCityChange = useCallback((city: string[number]) => {
     dispatch(changeCity(city));
-  };
+  }, [dispatch]);
+
+  const handleOfferHover = useCallback((offerId: string | null) => {
+    setActiveOfferId(offerId);
+  }, []);
 
   if (isLoading) {
     return <Spinner />;
@@ -113,7 +117,7 @@ export function MainPage(): React.JSX.Element {
               <h2 className="visually-hidden">Places</h2>
               <b className="places__found">{placeCount} places to stay in {currentCity}</b>
               <SortingOptions currentSort={currentSort} onSortChange={setCurrentSort} />
-              <Offers offers={sortedOffers} onOfferHover={setActiveOfferId} />
+              <Offers offers={sortedOffers} onOfferHover={handleOfferHover} />
             </section>
             <div className="cities__right-section">
               <Map offers={cityOffers} activeOfferId={activeOfferId} />
