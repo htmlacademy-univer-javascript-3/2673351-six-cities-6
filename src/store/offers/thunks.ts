@@ -1,11 +1,21 @@
 import { AxiosInstance } from 'axios';
 import { ThunkActionResult } from '../../types/thunk';
-import { loadComments, loadOffers, setOffersLoading } from '../action';
+import {
+  loadComments,
+  loadOffers,
+  setAuthorizationStatus,
+  setOffersLoading,
+  setUserInfo,
+} from '../action';
 import { Offer } from '../../types/offer';
 import { Review } from '../../types/review';
+import { AuthInfo } from '../../types/auth-info';
+import { AuthorizationStatus } from '../../const';
+import { saveToken } from '../../services/token';
 
 const OFFERS_URL = '/offers';
 const COMMENTS_URL = '/comments';
+const LOGIN_URL = '/login';
 
 type Location = {
     latitude: number;
@@ -27,6 +37,11 @@ type ResponseOffer = {
     location: Location;
   };
   location: Location;
+};
+
+type LoginData = {
+  email: string;
+  password: string;
 };
 
 type ResponseComment = {
@@ -88,4 +103,24 @@ export const fetchComments = (offerId: string): ThunkActionResult =>
     dispatch(loadComments([]));
     const { data } = await api.get<ResponseComment[]>(`${COMMENTS_URL}/${offerId}`);
     dispatch(loadComments(data.map(mapComment)));
+  };
+
+export const checkAuth = (): ThunkActionResult =>
+  async (dispatch, _getState, api: AxiosInstance) => {
+    try {
+      const { data } = await api.get<AuthInfo>(LOGIN_URL);
+      dispatch(setUserInfo(data));
+      dispatch(setAuthorizationStatus(AuthorizationStatus.Auth));
+    } catch {
+      dispatch(setUserInfo(null));
+      dispatch(setAuthorizationStatus(AuthorizationStatus.NoAuth));
+    }
+  };
+
+export const login = ({ email, password }: LoginData): ThunkActionResult =>
+  async (dispatch, _getState, api: AxiosInstance) => {
+    const { data } = await api.post<AuthInfo>(LOGIN_URL, { email, password });
+    saveToken(data.token);
+    dispatch(setUserInfo(data));
+    dispatch(setAuthorizationStatus(AuthorizationStatus.Auth));
   };

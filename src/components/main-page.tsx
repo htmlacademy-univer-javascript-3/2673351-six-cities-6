@@ -1,5 +1,6 @@
 import React, { useMemo, useState } from 'react';
-import { CITIES } from '../const';
+import { Link } from 'react-router-dom';
+import { AuthorizationStatus, CITIES } from '../const';
 import { CitiesList } from './cities-list';
 import { useAppDispatch, useAppSelector } from '../hooks';
 import { changeCity } from '../store/action';
@@ -18,6 +19,8 @@ export function MainPage(): React.JSX.Element {
   const dispatch = useAppDispatch();
 
   const isLoading = useAppSelector((state) => state.isLoading);
+  const authorizationStatus = useAppSelector((state) => state.authorizationStatus);
+  const userInfo = useAppSelector((state) => state.userInfo);
 
   const currentCity = useAppSelector((state) => state.cityName);
   const allOffers = useAppSelector((state) => state.offers);
@@ -26,6 +29,8 @@ export function MainPage(): React.JSX.Element {
 
   const cityOffers = allOffers.filter((offer) => offer.cityName === currentCity);
   const placeCount = cityOffers.length;
+  const favoritesCount = allOffers.filter((offer) => offer.isBookmark).length;
+  const isAuth = authorizationStatus === AuthorizationStatus.Auth;
 
   const sortedOffers = useMemo(() => {
     switch (currentSort) {
@@ -60,19 +65,31 @@ export function MainPage(): React.JSX.Element {
             </div>
             <nav className="header__nav">
               <ul className="header__nav-list">
-                <li className="header__nav-item user">
-                  <a className="header__nav-link header__nav-link--profile" href="#">
-                    <div className="header__avatar-wrapper user__avatar-wrapper">
-                    </div>
-                    <span className="header__user-name user__name">Oliver.conner@gmail.com</span>
-                    <span className="header__favorite-count">4</span>
-                  </a>
-                </li>
-                <li className="header__nav-item">
-                  <a className="header__nav-link" href="#">
-                    <span className="header__signout">Sign out</span>
-                  </a>
-                </li>
+                {isAuth ? (
+                  <>
+                    <li className="header__nav-item user">
+                      <Link className="header__nav-link header__nav-link--profile" to="/favorites">
+                        <div className="header__avatar-wrapper user__avatar-wrapper">
+                        </div>
+                        <span className="header__user-name user__name">{userInfo?.email ?? 'Unknown'}</span>
+                        <span className="header__favorite-count">{favoritesCount}</span>
+                      </Link>
+                    </li>
+                    <li className="header__nav-item">
+                      <a className="header__nav-link" href="#">
+                        <span className="header__signout">Sign out</span>
+                      </a>
+                    </li>
+                  </>
+                ) : (
+                  <li className="header__nav-item user">
+                    <Link className="header__nav-link header__nav-link--profile" to="/login">
+                      <div className="header__avatar-wrapper user__avatar-wrapper">
+                      </div>
+                      <span className="header__login">Sign in</span>
+                    </Link>
+                  </li>
+                )}
               </ul>
             </nav>
           </div>
