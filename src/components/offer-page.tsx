@@ -7,6 +7,9 @@ import { Review } from '../types/review';
 import { NearbyOffers } from './nearby-offers';
 import { AuthorizationStatus } from '../const';
 import { useFavoriteToggle } from '../use-favorite-toggle';
+import { useLogout } from '../use-logout';
+import { useAppSelector } from '../hooks';
+import { selectFavoritesCount, selectUserInfo } from '../store/selectors';
 
 export type OfferPageProps = {
   offerId: string;
@@ -35,6 +38,9 @@ export function OfferPage({
 }: OfferPageProps): React.JSX.Element {
   const isAuth = authorizationStatus === AuthorizationStatus.Auth;
   const handleFavoriteClick = useFavoriteToggle(offerId, isBookmark);
+  const handleLogout = useLogout();
+  const favoritesCount = useAppSelector(selectFavoritesCount);
+  const userInfo = useAppSelector(selectUserInfo);
   return (
     <div className="page">
       <header className="header">
@@ -47,19 +53,38 @@ export function OfferPage({
             </div>
             <nav className="header__nav">
               <ul className="header__nav-list">
-                <li className="header__nav-item user">
-                  <a className="header__nav-link header__nav-link--profile" href="#">
-                    <div className="header__avatar-wrapper user__avatar-wrapper">
-                    </div>
-                    <span className="header__user-name user__name">Oliver.conner@gmail.com</span>
-                    <span className="header__favorite-count">4</span>
-                  </a>
-                </li>
-                <li className="header__nav-item">
-                  <a className="header__nav-link" href="#">
-                    <span className="header__signout">Sign out</span>
-                  </a>
-                </li>
+                {isAuth ? (
+                  <>
+                    <li className="header__nav-item user">
+                      <Link className="header__nav-link header__nav-link--profile" to="/favorites">
+                        <div className="header__avatar-wrapper user__avatar-wrapper">
+                        </div>
+                        <span className="header__user-name user__name">{userInfo?.email ?? 'Unknown'}</span>
+                        <span className="header__favorite-count">{favoritesCount}</span>
+                      </Link>
+                    </li>
+                    <li className="header__nav-item">
+                      <a
+                        className="header__nav-link"
+                        href="#"
+                        onClick={(event) => {
+                          event.preventDefault();
+                          handleLogout();
+                        }}
+                      >
+                        <span className="header__signout">Sign out</span>
+                      </a>
+                    </li>
+                  </>
+                ) : (
+                  <li className="header__nav-item user">
+                    <Link className="header__nav-link header__nav-link--profile" to="/login">
+                      <div className="header__avatar-wrapper user__avatar-wrapper">
+                      </div>
+                      <span className="header__login">Sign in</span>
+                    </Link>
+                  </li>
+                )}
               </ul>
             </nav>
           </div>

@@ -17,12 +17,13 @@ import { Offer } from '../../types/offer';
 import { Review } from '../../types/review';
 import { AuthInfo } from '../../types/auth-info';
 import { AuthorizationStatus } from '../../const';
-import { saveToken } from '../../services/token';
+import { dropToken, saveToken } from '../../services/token';
 
 const OFFERS_URL = '/offers';
 const COMMENTS_URL = '/comments';
 const LOGIN_URL = '/login';
 const FAVORITES_URL = '/favorite';
+const LOGOUT_URL = '/logout';
 const NOT_FOUND_STATUS = 404;
 
 type Location = {
@@ -207,4 +208,13 @@ export const login = ({ email, password }: LoginData): ThunkActionResult =>
     dispatch(setUserInfo(data));
     dispatch(setAuthorizationStatus(AuthorizationStatus.Auth));
     await dispatch(fetchFavorites());
+  };
+
+export const logout = (): ThunkActionResult =>
+  async (dispatch, _getState, api: AxiosInstance) => {
+    await api.delete(LOGOUT_URL);
+    dropToken();
+    dispatch(setUserInfo(null));
+    dispatch(setAuthorizationStatus(AuthorizationStatus.NoAuth));
+    dispatch(setFavorites([]));
   };
