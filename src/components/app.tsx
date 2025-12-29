@@ -8,7 +8,7 @@ import { NotFoundPage } from './not-found-page';
 import { useAppSelector } from '../hooks';
 
 export function App(): React.JSX.Element {
-  const offers = useAppSelector((state) => state.offers) ;
+  const offers = useAppSelector((state) => state.offers);
   const favorites = offers.filter((offer) => offer.isBookmark);
   return (
     <BrowserRouter>
@@ -31,7 +31,11 @@ export function App(): React.JSX.Element {
         />
         <Route
           path="/offer/:id"
-          element={<OfferPageWrapper offers={offers} />}
+          element={<OfferPageWrapper />}
+        />
+        <Route
+          path="/404"
+          element={<NotFoundPage/>}
         />
         <Route
           path="*"
