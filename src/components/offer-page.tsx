@@ -5,8 +5,10 @@ import { Map } from './map';
 import { Offer } from '../types/offer';
 import { Review } from '../types/review';
 import { NearbyOffers } from './nearby-offers';
+import { AuthorizationStatus } from '../const';
 
 export type OfferPageProps = {
+  offerId: string;
   isPremium: boolean;
   price: number;
   isBookmark: boolean;
@@ -15,9 +17,11 @@ export type OfferPageProps = {
   rating: number;
   reviews: Review[];
   nearbyOffers: Offer[];
+  authorizationStatus: AuthorizationStatus;
 }
 
 export function OfferPage({
+  offerId,
   isPremium,
   price,
   isBookmark,
@@ -26,7 +30,9 @@ export function OfferPage({
   rating,
   reviews,
   nearbyOffers,
+  authorizationStatus,
 }: OfferPageProps): React.JSX.Element {
+  const isAuth = authorizationStatus === AuthorizationStatus.Auth;
   return (
     <div className="page">
       <header className="header">
@@ -182,7 +188,7 @@ export function OfferPage({
               </div>
               <section className="offer__reviews reviews">
                 <ReviewsList reviews={reviews} />
-                <OfferReviewForm />
+                {isAuth ? <OfferReviewForm offerId={offerId} /> : null}
               </section>
             </div>
           </div>

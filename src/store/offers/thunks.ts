@@ -1,9 +1,12 @@
-import { AxiosInstance } from 'axios';
+import { AxiosError, AxiosInstance } from 'axios';
 import { ThunkActionResult } from '../../types/thunk';
 import {
   loadComments,
   loadOffers,
   setAuthorizationStatus,
+  setNearbyOffers,
+  setOfferDetails,
+  setOfferNotFound,
   setOffersLoading,
   setUserInfo,
 } from '../action';
@@ -16,6 +19,7 @@ import { saveToken } from '../../services/token';
 const OFFERS_URL = '/offers';
 const COMMENTS_URL = '/comments';
 const LOGIN_URL = '/login';
+const NOT_FOUND_STATUS = 404;
 
 type Location = {
     latitude: number;
@@ -103,6 +107,57 @@ export const fetchComments = (offerId: string): ThunkActionResult =>
     dispatch(loadComments([]));
     const { data } = await api.get<ResponseComment[]>(`${COMMENTS_URL}/${offerId}`);
     dispatch(loadComments(data.map(mapComment)));
+  };
+
+export const fetchOfferDetails = (offerId: string): ThunkActionResult =>
+  async (dispatch, _getState, api: AxiosInstance) => {
+    dispatch(setOfferNotFound(false));
+    try {
+      const { data } = await api.get<ResponseOffer>(`${OFFERS_URL}/${offerId}`);
+      dispatch(setOfferDetails(mapOffer(data)));
+    } catch (error) {
+      const axiosError = error as AxiosError;
+      if (axiosError.response?.status === NOT_FOUND_STATUS) {
+        dispatch(setOfferNotFound(true));
+      }
+      dispatch(setOfferDetails(null));
+    }
+  };
+
+export const fetchNearbyOffers = (offerId: string): ThunkActionResult =>
+  async (dispatch, _getState, api: AxiosInstance) => {
+    const { data } = await api.get<ResponseOffer[]>(`${OFFERS_URL}/${offerId}/nearby`);
+    dispatch(setNearbyOffers(data.map(mapOffer)));
+  };
+
+type PostCommentData = {
+  comment: string;
+  rating: number;
+};
+
+export const postComment = (
+  offerId: string,
+  { comment, rating }: PostCommentData
+): ThunkActionResult =>
+  async (dispatch, getState, api: AxiosInstance) => {
+    const { data } = await api.post<ResponseComment>(`${COMMENTS_URL}/${offerId}`, {
+      comment,
+      rating,
+    });
+    const nextComments = [...getState().comments, mapComment(data)];
+    dispatch(loadComments(nextComments));
+  };
+
+export const fetchOfferData = (offerId: string): ThunkActionResult =>
+  async (dispatch, getState) => {
+    await dispatch(fetchOfferDetails(offerId));
+    if (getState().offerNotFound) {
+      return;
+    }
+    await Promise.all([
+      dispatch(fetchNearbyOffers(offerId)),
+      dispatch(fetchComments(offerId)),
+    ]);
   };
 
 export const checkAuth = (): ThunkActionResult =>

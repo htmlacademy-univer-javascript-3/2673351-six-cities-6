@@ -8,6 +8,9 @@ import {
   loadComments,
   loadOffers,
   setAuthorizationStatus,
+  setNearbyOffers,
+  setOfferDetails,
+  setOfferNotFound,
   setOffersLoading,
   setUserInfo,
 } from './action';
@@ -20,6 +23,9 @@ export type OffersState = {
   comments: Review[];
   authorizationStatus: AuthorizationStatus;
   userInfo: AuthInfo | null;
+  offerDetails: Offer | null;
+  nearbyOffers: Offer[];
+  offerNotFound: boolean;
 };
 
 const initialState: OffersState = {
@@ -29,6 +35,9 @@ const initialState: OffersState = {
   comments: [],
   authorizationStatus: AuthorizationStatus.Unknown,
   userInfo: null,
+  offerDetails: null,
+  nearbyOffers: [],
+  offerNotFound: false,
 };
 
 export const reducer = createReducer(initialState, (builder) => {
@@ -44,6 +53,15 @@ export const reducer = createReducer(initialState, (builder) => {
     })
     .addCase(loadComments, (state, action) => {
       state.comments = action.payload;
+    })
+    .addCase(setOfferDetails, (state, action) => {
+      state.offerDetails = action.payload;
+    })
+    .addCase(setNearbyOffers, (state, action) => {
+      state.nearbyOffers = action.payload;
+    })
+    .addCase(setOfferNotFound, (state, action) => {
+      state.offerNotFound = action.payload;
     })
     .addCase(setAuthorizationStatus, (state, action) => {
       state.authorizationStatus = action.payload;
